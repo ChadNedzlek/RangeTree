@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using FluentAssertions;
-
 namespace RangeTree.Tests;
 
 public class RangeTreeTests
