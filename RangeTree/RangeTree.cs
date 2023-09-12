@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Numerics;
 
 namespace RangeTree;
 
-public class RangeTree
+public class RangeTree<T> where T: IComparisonOperators<T,T,bool>
 {
     private INode _root;
 
-    public void AddRange(int min, int max)
+    public void AddRange(T min, T max)
     {
         if (_root == null)
         {
@@ -15,26 +16,12 @@ public class RangeTree
         }
 
         INode inserted = InsertAt(_root, min, max);
-        Validate(inserted, min, max, true);
-        Validate(inserted, _root.Min, _root.Max, false);
         INode rebalanced = Rebalance(inserted);
-        Validate(rebalanced, min, max, true);
-        Validate(rebalanced, _root.Min, _root.Max, false);
 
         _root = rebalanced;
-
-        void Validate(INode n, int a, int b, bool v)
-        {
-            if (!n.Contains(a))
-                throw new InvalidOperationException();
-            if (!n.Contains(b))
-                throw new InvalidOperationException();
-            if (v && !n.Contains((a+b)/2))
-                throw new InvalidOperationException();
-        }
     }
 
-    private static INode InsertAt(INode node, int min, int max)
+    private static INode InsertAt(INode node, T min, T max)
     {
         if (min <= node.Min && max >= node.Max)
         {
@@ -65,7 +52,7 @@ public class RangeTree
                 }
 
                 // It's not a full overlap, so we need to expand it
-                return new LeafNode(Math.Min(min, node.Min), Math.Max(max, node.Max));
+                return new LeafNode(Min(min, node.Min), Max(max, node.Max));
             
             case TreeNode oTree:
                 if (max < oTree.Right.Min)
@@ -102,6 +89,16 @@ public class RangeTree
             default:
                 throw new NotSupportedException();
         }
+    }
+
+    private static T Min(T a, T b)
+    {
+        return a < b ? a : b; 
+    }
+    
+    private static T Max(T a, T b)
+    {
+        return a > b ? a : b; 
     }
 
     private static (INode newTree, LeafNode rightNode) ExtractRightMostNode(INode node)
@@ -157,10 +154,10 @@ public class RangeTree
     private interface INode
     {
         int Depth { get; }
-        int Min { get; }
-        int Max { get; }
+        T Min { get; }
+        T Max { get; }
 
-        bool Contains(int value);
+        bool Contains(T value);
     }
 
     private class TreeNode : INode
@@ -169,10 +166,10 @@ public class RangeTree
         public INode Right { get; }
 
         public int Depth { get; }
-        public int Min { get; }
-        public int Max { get; }
+        public T Min { get; }
+        public T Max { get; }
     
-        public bool Contains(int value)
+        public bool Contains(T value)
         {
             if (value < Min || value > Max)
                 return false;
@@ -204,7 +201,7 @@ public class RangeTree
 
     private class LeafNode : INode
     {
-        public LeafNode(int min, int max)
+        public LeafNode(T min, T max)
         {
             if (min > max)
                 throw new ArgumentException("Min > Max");
@@ -213,10 +210,10 @@ public class RangeTree
         }
 
         public int Depth => 1;
-        public int Min { get; }
-        public int Max { get; }
+        public T Min { get; }
+        public T Max { get; }
     
-        public bool Contains(int value) => value >= Min && value <= Max;
+        public bool Contains(T value) => value >= Min && value <= Max;
     
         public override string ToString()
         {

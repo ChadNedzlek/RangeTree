@@ -5,14 +5,14 @@ public class RangeTreeTests
     [Test]
     public void NoNodeTest()
     {
-        RangeTree t = new ();
+        RangeTree<int> t = new ();
         t.Contains(5).Should().BeFalse();
     }
 
     [Test]
     public void SingleRangeContains()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 7);
         t.Contains(3).Should().BeTrue();
         t.Contains(5).Should().BeTrue();
@@ -22,7 +22,7 @@ public class RangeTreeTests
     [Test]
     public void SingleRangeNoContains()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 7);
         t.Contains(1).Should().BeFalse();
         t.Contains(10).Should().BeFalse();
@@ -31,7 +31,7 @@ public class RangeTreeTests
     [Test]
     public void DoubleRangeContains()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 7);
         t.AddRange(13, 17);
         t.Contains(3).Should().BeTrue();
@@ -45,7 +45,7 @@ public class RangeTreeTests
     [Test]
     public void DoubleRangeNoContains()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 7);
         t.AddRange(13, 17);
         t.Contains(1).Should().BeFalse();
@@ -57,7 +57,7 @@ public class RangeTreeTests
     [Test]
     public void TestRebalanceRight()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         for (int i = 1; i < 100; i += 2)
         {
             t.AddRange(i, i);
@@ -73,7 +73,7 @@ public class RangeTreeTests
     [Test]
     public void TestRebalanceLeft()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         for (int i = 99; i >= 1; i -= 2)
         {
             t.AddRange(i, i);
@@ -89,7 +89,7 @@ public class RangeTreeTests
     [Test]
     public void OverlapAll()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(5, 5);
         t.AddRange(3, 7);
         t.Contains(5).Should().BeTrue();
@@ -98,7 +98,7 @@ public class RangeTreeTests
     [Test]
     public void OverlapInside()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 7);
         t.AddRange(5, 5);
         t.Contains(5).Should().BeTrue();
@@ -107,7 +107,7 @@ public class RangeTreeTests
     [Test]
     public void OverlapLeft()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(5, 7);
         t.AddRange(3, 6);
         t.Contains(5).Should().BeTrue();
@@ -116,7 +116,7 @@ public class RangeTreeTests
     [Test]
     public void OverlapRight()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(3, 6);
         t.AddRange(5, 7);
         t.Contains(5).Should().BeTrue();
@@ -125,7 +125,7 @@ public class RangeTreeTests
     [Test]
     public void OverlapJoining()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(2, 4);
         t.AddRange(6, 8);
         t.AddRange(3, 7);
@@ -135,7 +135,7 @@ public class RangeTreeTests
     [Test]
     public void MinJoin()
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         t.AddRange(1, 3);
         t.AddRange(20, 22);
         
@@ -168,7 +168,7 @@ public class RangeTreeTests
 
     private void TestRanges(params (int a, int b)[] ranges)
     {
-        RangeTree t = new();
+        RangeTree<int> t = new();
         foreach ((int a, int b) in ranges)
         {
             t.AddRange(a, b);
