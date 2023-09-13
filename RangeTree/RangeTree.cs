@@ -147,7 +147,7 @@ public class RangeTree<T> where T: IComparisonOperators<T,T,bool>
         }
     }
 
-    public bool Contains(int value) => _root?.Contains(value) ?? false;
+    public bool Contains(T value) => _root?.Contains(value) ?? false;
 
     public override string ToString() => _root?.ToString() ?? "[empty]";
     
